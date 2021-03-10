@@ -4,6 +4,14 @@ namespace cmever\AWS\Queue\contracts;
 
 interface QueueHandler
 {
+
+    /**
+     * set queue config
+     * @param array $config
+     * @return bool
+     */
+    public function setConfig(array $config): bool;
+
     /**
      * push notification to driver (sns/sqs/redis etc.) and notify event
      * @param string $event

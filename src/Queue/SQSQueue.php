@@ -17,9 +17,14 @@ class SQSQueue implements EventHandler, QueueHandler
     protected $client = null;
 
     protected $config = [
-        'region' => 'us-west-1',
         'queryUrl' => '',
     ];
+
+    public function setConfig(array $config): bool
+    {
+        $this->config = array_merge($this->config, $config);
+        return true;
+    }
 
     public function __construct(array $option = [])
     {
@@ -33,23 +38,30 @@ class SQSQueue implements EventHandler, QueueHandler
 
     public function push(string $event, string $bundleId, array $data = []): bool
     {
-        $params = [
-            'DelaySeconds' => 0,
-            'MessageAttributes' => [
-                "Event" => [
-                    'DataType' => "String",
-                    'StringValue' => $event
-                ],
-                "BundleId" => [
-                    'DataType' => "String",
-                    'StringValue' => $bundleId
-                ],
+        $messageAttributes = [
+            "Event" => [
+                'DataType' => "String",
+                'StringValue' => $event
             ],
-            'MessageBody' => json_encode([
-                'data' => $data,
-            ]),
-            'QueueUrl' => $this->config['queryUrl'],
+            "BundleId" => [
+                'DataType' => "String",
+                'StringValue' => $bundleId
+            ],
         ];
+        $body = json_encode([
+            'data' => $data,
+        ]);
+        return $this->pushToSQS($messageAttributes, $body);
+    }
+
+    public function pushToSQS($messageAttributes, $body="", $params = []): bool
+    {
+        $params = array_merge([
+            'DelaySeconds' => 0,
+            'MessageAttributes' => $messageAttributes,
+            'MessageBody' => $body,
+            'QueueUrl' => $this->config['queryUrl'],
+        ], $params);
         try {
             $this->client->sendMessage($params);
             return true;

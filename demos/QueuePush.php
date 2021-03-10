@@ -7,15 +7,23 @@ require(__DIR__.'/Benchmark.php');
 
 function main()
 {
-    $sqs = new SQSQueue();
-    $times = 10;
+    $sqs = new SQSQueue([
+        'profile' => 'default'
+    ]);
+    $sqs->setConfig([
+        'queryUrl' => 'https://sqs.us-west-1.amazonaws.com/xxxxxx/xxxx'
+    ]);
+    $times = 1;
     $repeat = 3;
 
     $pushTest = new Benchmark();
     $pushTest->benchmarkTest(function (int $i) use ($sqs) {
-        return $sqs->push('add-coins', 'test.bundle.id', [
-            'total' => 100 + $i,
-        ]);
+        return $sqs->pushToSQS([
+            "BundleId" => [
+                'DataType' => "String",
+                'StringValue' => "test.unit.aws-utils"
+            ],
+        ], "for test");
     }, $times, $repeat)->renderBenchmarkTable('推送消息');
 
     // clear
