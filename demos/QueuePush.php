@@ -8,7 +8,12 @@ require(__DIR__.'/Benchmark.php');
 function main()
 {
     $sqs = new SQSQueue([
-        'profile' => 'default'
+        'profile' => 'default',
+        // use profile or credentials
+        'credentials' => [
+            'key'    => '...',
+            'secret' => '...',
+        ],
     ]);
     $sqs->setConfig([
         'queryUrl' => 'https://sqs.us-west-1.amazonaws.com/xxxxxx/xxxx'
