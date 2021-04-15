@@ -31,7 +31,12 @@ class SQSQueue implements EventHandler, QueueHandler
         $option = array_merge([
             'profile' => 'default',
             'region' => 'us-west-1',
-            'version' => '2012-11-05'
+            'version' => '2012-11-05',
+            // use profile or credentials
+            'credentials' => [
+                'key'    => '...',
+                'secret' => '...',
+            ],
         ], $option);
         $this->client = new SqsClient($option);
     }
