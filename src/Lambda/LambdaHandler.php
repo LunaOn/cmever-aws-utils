@@ -37,13 +37,10 @@ class LambdaHandler
      */
     public static function invoke(string $functionName, string $payload, string $region = 'us-west-1', string $version = '$LATEST', array $config = [])
     {
-        $clientConfig = [
+        $clientConfig = array_merge([
             'region' => $region,
             'version' => '2015-03-31'
-        ];
-        if (!empty($config['profile'])) {
-            $clientConfig['profile'] = $config['profile'];
-        }
+        ], $config);
         try {
             $client = new LambdaClient($clientConfig);
             $invokeConfig = [
