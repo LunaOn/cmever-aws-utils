@@ -1,7 +1,7 @@
 {
   "name": "cmever/aws-utils",
   "description": "内部调用关联 AWS 的服务",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "library",
   "license": "proprietary",
   "authors": [
